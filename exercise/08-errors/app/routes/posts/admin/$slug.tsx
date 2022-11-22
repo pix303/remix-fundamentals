@@ -3,10 +3,12 @@ import { json, redirect } from "@remix-run/node";
 import {
   Form,
   useActionData,
+  useCatch,
   useLoaderData,
   useTransition,
 } from "@remix-run/react";
 import invariant from "tiny-invariant";
+import { ErrorFallback } from "~/components";
 
 import {
   createPost,
@@ -22,7 +24,9 @@ export async function loader({ params }: LoaderArgs) {
   }
 
   const post = await getPost(params.slug);
-  invariant(post, `Post not found: ${params.slug}`);
+  if (!post) {
+    throw new Response("Not found", { status: 404, statusText: "Not found" });
+  }
   return json({ post });
 }
 
@@ -152,5 +156,17 @@ export default function PostAdmin() {
   );
 }
 
-// 🐨 Add an ErrorBoundary component to this
-// 💰 You can use the ErrorFallback component from "~/components"
+export const ErrorBoundary = ({ error }: { error: Error }) => {
+  console.log(error);
+  return <ErrorFallback>Error on admin: {error.name} - {error.message}</ErrorFallback>
+}
+
+
+export const CatchBoundary = () => {
+  const catchData = useCatch();
+  if (catchData.status === 404) {
+    return <ErrorFallback>Catch the error on admin: {catchData.status} - {catchData.statusText}</ErrorFallback>
+  }
+
+  throw new Error(`This status is not handled: ${catchData.status}`);
+}

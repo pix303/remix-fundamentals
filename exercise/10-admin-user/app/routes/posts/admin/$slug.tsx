@@ -8,6 +8,7 @@ import {
   useParams,
   useTransition,
 } from "@remix-run/react";
+import { request } from "http";
 import invariant from "tiny-invariant";
 import { ErrorFallback } from "~/components";
 
@@ -17,10 +18,11 @@ import {
   getPost,
   updatePost,
 } from "~/models/post.server";
+import { requireAdminUser } from "~/session.server";
 
 // 🐨 get the request
-export async function loader({ params }: LoaderArgs) {
-  // 🐨 call requireAdminUser from session.server with the request
+export async function loader({ params, request }: LoaderArgs) {
+  await requireAdminUser(request);
   invariant(params.slug, "slug not found");
   if (params.slug === "new") {
     return json({ post: null });

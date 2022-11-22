@@ -59,7 +59,9 @@ export default function Index() {
           </div>
         </div>
 
-        {/* 💿 Add a link to /posts here */}
+        <div className="w-36 mx-auto my-10">
+          <Link className="text-blue-700" to="/posts">Go to posts</Link>
+        </div>
 
         <div className="mx-auto max-w-7xl py-2 px-4 sm:px-6 lg:px-8">
           <div className="mt-6 flex flex-wrap justify-center gap-8">

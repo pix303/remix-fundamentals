@@ -100,3 +100,13 @@ export async function logout(request: Request) {
     },
   });
 }
+
+
+export async function requireAdminUser(request: Request): Promise<User> {
+  const user = await requireUser(request);
+  const isAdmin = user.email === process.env.ADMIN_EMAIL;
+  if (!isAdmin) {
+    throw await logout(request);
+  }
+  return user;
+}

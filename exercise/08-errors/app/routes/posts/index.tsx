@@ -1,5 +1,6 @@
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import { ErrorFallback } from "~/components";
 import { getPostListItems } from "~/models/post.server";
 
 export const loader = async () => {
@@ -32,3 +33,10 @@ export default function Posts() {
     </main>
   );
 }
+
+
+export const ErrorBoundary = ({ error }: { error: Error }) => {
+  console.log(error);
+  return <ErrorFallback>Error reading posts {error.name} - {error.message}</ErrorFallback>
+}
+
